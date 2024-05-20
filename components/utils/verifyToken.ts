@@ -4,7 +4,7 @@ import type { CustomRequest } from "@/types";
 
 export const verifyToken =
   (handler: any) => async (req: CustomRequest, res: NextApiResponse) => {
-    const token = req.headers.authorization?.replace("Bearer ", "");
+    const token = req.headers.authorization?.split(" ").pop();
     if (!token) {
       return res.status(401).json({ message: "Unauthorized" });
     }

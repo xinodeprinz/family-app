@@ -1,21 +1,29 @@
 import { Button, Header, Protected } from "@/components";
+import { axios, sweetAlert } from "@/components/utils";
+import type { IUser } from "@/types";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 const Home: React.FC = () => {
   const router = useRouter();
-  const members = [
-    {
-      id: 1,
-      name: "John Doe",
-      email: "john@example.com",
-      dob: "1990-01-01",
-      address: "123 Main St",
-      phone: "555-1234",
-      mother: "Jane Doe",
-      father: "John Doe Sr.",
-    },
-    // Add more member objects here
-  ];
+  const [users, setUsers] = useState<IUser[]>([]);
+
+  useEffect(() => {
+    const getUsers = async () => {
+      const res = await axios<IUser[]>({ method: "GET", url: "/api/users" });
+      setUsers(res);
+    };
+    getUsers();
+  }, []);
+
+  const deleteUser = async (id: number) => {
+    const res = await axios<IUser[]>({
+      method: "DELETE",
+      url: `/api/users/delete/${id}`,
+    });
+    setUsers(res);
+    sweetAlert({ icon: "success", title: "User deleted" });
+  };
 
   return (
     <>
@@ -42,6 +50,7 @@ const Home: React.FC = () => {
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-black text-white">
+                <th className="p-2 text-left border">#</th>
                 <th className="p-2 text-left border">Name</th>
                 <th className="p-2 text-left border">Email</th>
                 <th className="p-2 text-left border">DOB</th>
@@ -53,30 +62,35 @@ const Home: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {members.map((member) => (
-                <tr key={member.id}>
-                  <td className="border p-2">{member.name}</td>
-                  <td className="border p-2">{member.email}</td>
-                  <td className="border p-2">{member.dob}</td>
-                  <td className="border p-2">{member.address}</td>
-                  <td className="border p-2">{member.phone}</td>
-                  <td className="border p-2">{member.mother}</td>
-                  <td className="border p-2">{member.father}</td>
-                  <td className="border p-2">
+              {users.map((user, index) => (
+                <tr key={user.id}>
+                  <td className="border p-2">{++index}</td>
+                  <td className="border p-2 capitalize">{user.name}</td>
+                  <td className="border p-2">{user.email}</td>
+                  <td className="border p-2">{user.dob}</td>
+                  <td className="border p-2 capitalize">{user.address}</td>
+                  <td className="border p-2">{user.phone}</td>
+                  <td className="border p-2 capitalize">
+                    {user.mother ? user.mother.name : "-"}
+                  </td>
+                  <td className="border p-2 capitalize">
+                    {user.father ? user.father.name : "-"}
+                  </td>
+                  <td className="border p-2 capitalize">
                     <div className="flex gap-x-3">
                       <Button
                         text="edit"
                         status="primary"
                         type="button"
                         className="text-sm"
-                        onClick={() => router.push(`/edit/${member.id}`)}
+                        onClick={() => router.push(`/edit/${user.id}`)}
                       />
                       <Button
                         text="delete"
                         status="danger"
                         type="button"
                         className="text-sm"
-                        onClick={() => console.log(`Deleting ${member.id}`)}
+                        onClick={() => deleteUser(user.id)}
                       />
                     </div>
                   </td>
