@@ -1,6 +1,6 @@
 import { TextInput, Button } from "@/components";
 import type { IFormData, IUser, IForm } from "@/types";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import SelectInput from "./selectInput";
 import { useRouter } from "next/router";
 import { axios } from "./utils";
@@ -8,10 +8,7 @@ import { useDispatch } from "react-redux";
 import { login } from "@/store";
 
 const SignUpForm: React.FC<IForm> = ({ type }) => {
-  const router = useRouter();
-  const dispatch = useDispatch();
-  const users = [{ id: 1, name: "nde" }];
-  const [data, setData] = useState<IFormData>({
+  const initialData: IFormData = {
     name: "",
     email: "",
     phone: "",
@@ -19,12 +16,28 @@ const SignUpForm: React.FC<IForm> = ({ type }) => {
     address: "",
     password: "",
     ...(type !== "sign up" && { mother_id: 0, father_id: 0 }),
-  });
+  };
+
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const [users, setUsers] = useState<IUser[]>([]);
+  const [data, setData] = useState<IFormData>(initialData);
+
+  useEffect(() => {
+    const getUsers = async () => {
+      const res = await axios<IUser[]>({ method: "GET", url: "/api/users" });
+      setUsers(res);
+    };
+    getUsers();
+  }, []);
 
   const handleInput = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { id, value } = e.target;
+    let { id, value } = e.target as any;
+    if (["mother_id", "father_id"].includes(id)) {
+      value = parseInt(value);
+    }
     setData({ ...data, [id]: value });
   };
 
@@ -39,6 +52,13 @@ const SignUpForm: React.FC<IForm> = ({ type }) => {
       localStorage.setItem("access_token", res.access_token);
       dispatch(login(res.user));
       router.push("/");
+    } else if (type === "add") {
+      await axios({
+        method: "POST",
+        url: "/api/users/add",
+        data,
+      });
+      setData(initialData);
     }
   };
 

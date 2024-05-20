@@ -1,5 +1,6 @@
 import { AxiosProgressEvent, CancelToken, ResponseType } from "axios";
 import { ChangeEvent } from "react";
+import type { IUser } from "./auth";
 
 interface IInput {
   label?: string;
@@ -27,7 +28,7 @@ export interface ITextInput extends IInput {
 }
 
 export interface ISelectInput extends IInput {
-  data: { id: number; name: string }[];
+  data: IUser[];
 }
 
 export interface IButton {
