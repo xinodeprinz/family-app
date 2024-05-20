@@ -1,5 +1,5 @@
 import { Button, Header, Protected } from "@/components";
-import { axios, sweetAlert } from "@/components/utils";
+import { axios, formatDate, sweetAlert } from "@/components/utils";
 import type { IUser } from "@/types";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -24,15 +24,6 @@ const Home: React.FC = () => {
     setUsers(res);
     sweetAlert({ icon: "success", title: "User deleted" });
   };
-
-  function formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    });
-  }
 
   return (
     <>
