@@ -17,6 +17,7 @@ export interface IFormData extends ISignInData {
 
 export interface IForm {
   type: "sign up" | "edit" | "add";
+  id?: number;
 }
 
 export interface IUser {
@@ -28,6 +29,8 @@ export interface IUser {
   address: string;
   mother: IUser;
   father: IUser;
+  mother_id: number;
+  father_id: number;
 }
 
 export interface CustomRequest extends NextApiRequest {

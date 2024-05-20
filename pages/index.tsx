@@ -25,6 +25,15 @@ const Home: React.FC = () => {
     sweetAlert({ icon: "success", title: "User deleted" });
   };
 
+  function formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+  }
+
   return (
     <>
       <Header />
@@ -67,7 +76,7 @@ const Home: React.FC = () => {
                   <td className="border p-2">{++index}</td>
                   <td className="border p-2 capitalize">{user.name}</td>
                   <td className="border p-2">{user.email}</td>
-                  <td className="border p-2">{user.dob}</td>
+                  <td className="border p-2">{formatDate(user.dob)}</td>
                   <td className="border p-2 capitalize">{user.address}</td>
                   <td className="border p-2">{user.phone}</td>
                   <td className="border p-2 capitalize">

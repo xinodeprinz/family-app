@@ -7,7 +7,7 @@ import { axios } from "./utils";
 import { useDispatch } from "react-redux";
 import { login } from "@/store";
 
-const SignUpForm: React.FC<IForm> = ({ type }) => {
+const SignUpForm: React.FC<IForm> = ({ type, id }) => {
   const initialData: IFormData = {
     name: "",
     email: "",
@@ -29,7 +29,25 @@ const SignUpForm: React.FC<IForm> = ({ type }) => {
       setUsers(res);
     };
     getUsers();
-  }, []);
+    if (type === "edit") {
+      const getUser = async () => {
+        const res = await axios<IUser>({
+          method: "GET",
+          url: `/api/users/${id}`,
+        });
+        setData({
+          dob: res.dob.split("T").shift() as string,
+          name: res.name,
+          email: res.email,
+          address: res.address,
+          phone: res.phone,
+          mother_id: res.mother_id,
+          father_id: res.father_id,
+        });
+      };
+      id && getUser();
+    }
+  }, [id]);
 
   const handleInput = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -59,6 +77,12 @@ const SignUpForm: React.FC<IForm> = ({ type }) => {
         data,
       });
       setData(initialData);
+    } else {
+      await axios({
+        method: "POST",
+        url: `/api/users/update/${id}`,
+        data,
+      });
     }
   };
 
