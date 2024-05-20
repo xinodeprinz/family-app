@@ -58,7 +58,7 @@ const SignInForm: React.FC = () => {
           <Button text="sign in" type="submit" status="primary" />
         </form>
         <div className="text-center text-gray-700">
-          Don't have an account?
+          {"Don't have an account?"}
           <Link
             className="ml-1 font-bold text-blue-500 capitalize hover:text-blue-800"
             href="/signup"
