@@ -89,9 +89,9 @@ const SignUpForm: React.FC<IForm> = ({ type, id }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+      className="bg-white shadow-md rounded px-8 mt-8 pt-6 pb-8 mb-4"
     >
-      <div className="flex justify-between items-center">
+      <div className="flex max-sm:flex-col justify-between items-center">
         <h2 className="text-2xl font-bold mb-6 capitalize">
           {type} {type !== "sign up" ? "member" : ""}
         </h2>
@@ -101,10 +101,11 @@ const SignUpForm: React.FC<IForm> = ({ type, id }) => {
             status="success"
             text="go back"
             onClick={() => router.back()}
+            className="max-sm:mb-10"
           />
         )}
       </div>
-      <div className="grid grid-cols-2 gap-x-5">
+      <div className="grid lg:grid-cols-2 gap-x-5">
         <TextInput
           className="mb-4"
           label="name"
@@ -127,6 +128,7 @@ const SignUpForm: React.FC<IForm> = ({ type, id }) => {
           className="mb-4"
           label="date of birth"
           id="dob"
+          placeholder="Date of birth"
           value={data.dob}
           type="date"
           onChange={handleInput}
